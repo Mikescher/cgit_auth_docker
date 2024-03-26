@@ -1,0 +1,40 @@
+#!/bin/bash
+
+
+# Usage:
+#
+#   `glog`       return newest 32 commits
+#   `glog --`    show all commit
+#   `glog -n`    show n newest commits
+#   `glog $$`    call git log with additional params $$    
+#
+
+params=( "$@" )
+
+if [[ "$#" == 0 ]]; then
+    params+=("-32")
+fi
+
+if [[ "$#" == 1 && "$1" == "--" ]]; then
+  unset "params[0]"
+fi
+
+
+
+# sed[1]: replace same commiter & author with only one ref to name+mail
+
+# sed[2]: replace same commiter-date & author-date with only one ref to date
+
+git log \
+    --graph \
+    --pretty=format:'%Cred%h%Creset %<(64,trunc)%s  %Cgreen<609548290>%cd | %ad<97153875> %C(bold blue)<99364>%ae|%ce<23456736>%Creset %C(yellow)%d%Creset' \
+    --date=format:'%Y-%m-%d' \
+    --abbrev-commit \
+    --color \
+    "${params[@]}" | \
+    sed -r 's/<99364>(.*)\|\1<23456736>/<99364>\1<23456736>/g'           | sed 's/<99364>/</g'      | sed 's/<23456736>/>/g'   | \
+    sed -r 's/<609548290>(.*) \| \1<97153875>/<609548290>\1<97153875>/g' | sed 's/<609548290>/\(/g' | sed 's/<97153875>/\)/g'    \
+
+
+echo "" # add missing newline
+

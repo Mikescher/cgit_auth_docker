@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -o nounset   # disallow usage of unset vars  ( set -u )
+set -o errexit   # Exit immediately if a pipeline returns non-zero.  ( set -e )
+set -o errtrace  # Allow the above trap be inherited by all functions in the script.  ( set -E )
+set -o pipefail  # Return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status
+IFS=$'\n\t'      # Set $IFS to only newline and tab.
+
+if [[ $# -ne 1 ]] ; then
+	>&2 echo "Not enough parameters supplied"
+	echo ""
+	echo "Usage:"
+	echo "  src <scriptname>"
+	exit 1
+fi
+
+cmdstr="$1"
+
+printer=-1
+
+if command -v cat > /dev/null; then
+	printer=0
+fi
+
+if [ -t 0 ]; then
+	if command -v bat > /dev/null; then
+		printer=1
+	elif command -v batcat > /dev/null; then
+		printer=2
+	fi
+fi
+
+if which "${cmdstr}" > /dev/null; then
+	
+	fp=$(which "${cmdstr}")
+	
+	mime=$(file -b --mime-type "${fp}")
+	
+	while [ -L "${fp}" ]; do
+		printf "# %-64s (%-8s %s)\n" "${fp}" "symlink:" "${mime}"
+		fp=$(readlink -f "$fp")
+		mime=$(file -b --mime-type "${fp}")
+	done
+	
+	if [[ "$mime" =~ "text" ]]; then
+		printf "# %-64s (%-8s %s)\n" "${fp}" "text:" "${mime}"
+		
+		if [ "$printer" == "0" ]; then
+			echo ""
+			cat "$fp"
+		elif [ "$printer" == "1" ]; then
+			bat --paging=never --style "numbers,plain,grid" "$fp"
+		elif [ "$printer" == "2" ]; then
+			batcat --paging=never --style "numbers,plain,grid" "$fp"
+		else
+			echo ""
+			echo "(?? unknown output program)"
+		fi
+		exit 0
+	else
+		printf "# %-64s (%-8s %s)\n" "${fp}" "binary:" "${mime}"
+		exit 0
+	fi
+	
+fi
+
+if command -v "${cmdstr}" > /dev/null; then
+	
+	command -v "${cmdstr}"
+	exit 1
+	
+fi
+
+>&2 echo "Command '${cmdstr}' is neither a program nor an alias"
+exit 100
+
+

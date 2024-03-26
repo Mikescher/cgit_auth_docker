@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# https://askubuntu.com/questions/1033998
+# https://unix.stackexchange.com/questions/315188
+# https://stackoverflow.com/questions/1795976
+
+
+ls -halF --color "$@" | awk '
+{
+
+  if (($1)~/total.*/) { print; next; }
+  if ($1 == "")       { print; next; }
+
+  k=0;
+  setuid=false;
+  setgid=false;
+  sticky=false;
+
+  for(i=0;i<=8;i++)
+  {
+    v = substr($1,i+2,1);
+    if (v == "r" && (i == 0 || i == 3 || i == 6)) {
+        k += 2^(8-i);
+    } else if (v == "w" && (i == 1 || i == 4 || i == 7)) {
+        k += 2^(8-i);
+    } else if (v == "x" && (i == 2 || i == 5 || i == 8)) {
+        k += 2^(8-i);
+    } else if (v == "-") {
+        continue;
+    } else if (v == "s" && i == 2) {
+      setuid=true;
+      k += 2^(8-i);
+    } else if (v == "S" && i == 2) {
+      setuid=true;
+    } else if (v == "s" && i == 5) {
+      setgid=true;
+      k += 2^(8-i);
+    } else if (v == "S" && i == 5) {
+      setgid=true;
+    } else if (v == "t" && i == 8) {
+      sticky=true;
+      k += 2^(8-i);
+    } else if (v == "T" && i == 8) {
+      sticky=true;
+    } else {
+      # printf("%s", "??? ");
+      print;
+      # printf("%s[ll-parse] Unknown character [%s] in position %d%s\n", "\033[0;31m", v, i, "\033[0m");
+      next;
+    }
+  }
+
+  printf("%03o ",k);
+
+  print;
+}'
