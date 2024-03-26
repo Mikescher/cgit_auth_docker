@@ -14,17 +14,29 @@ RUN apk add --no-cache ca-certificates tzdata sudo gettext dumb-init \
                        vim htop bash git curl \
                        xz zlib \
                        python3 py3-markdown py3-pygments \
-                       cgit 
+                       openssh-server cgit 
 
-RUN mkdir -p /var/cache/cgit && chown www-data:www-data /var/cache/cgit
-RUN mkdir -p /var/www/cgit   && chown www-data:www-data /var/www/cgit
 
-COPY docker-entrypoint.sh /
-COPY cgit-simple-authentication /opt/cgit-simple-authentication 
-COPY scripts/* /usr/local/bin/
+RUN adduser "git" --no-create-home --home /var/www --uid 1000 --disabled-password --shell /bin/bash && \
+    echo "git:$(cat /dev/urandom | tr -dc A-Za-z0-9 | head -c 128 )" | chpasswd
 
-COPY cgitrc /tmp/cgitrc.tmpl    
-COPY httpd.conf /usr/local/apache2/conf/httpd.conf
+
+RUN mkdir -p /var/cache/cgit && chown git:git /var/cache/cgit
+RUN mkdir -p /cgit           && chown git:git /cgit
+RUN mkdir -p /config
+
+COPY sshd_config /etc/ssh/sshd_config
+
+###################################################
+
+ADD docker-entrypoint.sh set_root_pw.sh /
+ADD cgit-simple-authentication /opt/cgit-simple-authentication 
+ADD scripts/* /usr/local/bin/
+
+RUN chown git:git /opt/cgit-simple-authentication 
+
+ADD cgitrc /tmp/cgitrc.tmpl    
+ADD httpd.conf /usr/local/apache2/conf/httpd.conf
 
 WORKDIR "/var/www/"
 
@@ -32,4 +44,4 @@ ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD "httpd-foreground"
 
 
-EXPOSE 80
+EXPOSE 80 22           

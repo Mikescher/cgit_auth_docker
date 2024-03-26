@@ -7,7 +7,7 @@ source-filter=/usr/lib/cgit/filters/syntax-highlighting.py
 about-filter=/usr/lib/cgit/filters/about-formatting.sh
 
 
-scan-path=/var/www/cgit
+scan-path=/cgit
 cache-scanrc-ttl=1
 
 
