@@ -33,6 +33,40 @@ envsubst < /tmp/cgitrc.tmpl > /etc/cgitrc
 sudo chown git:git -R /cgit/
 
 echo ""
+echo "============= SETUP GIT ============="
+echo ""
+
+touch /var/www/.gitconfig       && chown git:git /var/www/.gitconfig
+touch /var/www/.git-credentials && chown git:git /var/www/.git-credentials
+touch /var/www/.bash_profile    && chown git:git /var/www/.bash_profile
+
+su -c 'git config --global init.defaultBranch master' git
+
+echo "cd /cgit" >> "/var/www/.bash_profile"
+
+echo ""
+echo "============= SETUP CGIT-AUTH ============="
+echo ""
+
+if [ ! -f "/config/auth.db" ]; then
+
+    echo "Init auth.db"
+
+    [ -z "$DEFAULT_USER" ] && { red "missing env DEFAULT_USER -- cannot init auth.db"; exit 1; }
+    [ -z "$DEFAULT_PASS" ] && { red "missing env DEFAULT_PASS -- cannot init auth.db"; exit 1; }
+
+    /opt/cgit-simple-authentication database init
+    /opt/cgit-simple-authentication user add "$DEFAULT_USER" "$DEFAULT_PASS"
+
+    [ ! -f "/config/auth.db" ] && { red "failed to init auth.db"; exit 1; }
+
+    chown git:git "/config/auth.db"
+
+    chown git:git /var/cache/cgit/ -R
+
+fi
+
+echo ""
 echo "============ SSHD KEYGEN ============"
 echo ""
 

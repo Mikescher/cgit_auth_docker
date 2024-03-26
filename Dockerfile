@@ -23,6 +23,7 @@ RUN adduser "git" --no-create-home --home /var/www --uid 1000 --disabled-passwor
 
 RUN mkdir -p /var/cache/cgit && chown git:git /var/cache/cgit
 RUN mkdir -p /cgit           && chown git:git /cgit
+RUN mkdir -p /var/www        && chown git:git /var/www
 RUN mkdir -p /config
 
 COPY sshd_config /etc/ssh/sshd_config
