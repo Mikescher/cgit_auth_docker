@@ -14,7 +14,7 @@ RUN apk add --no-cache ca-certificates tzdata sudo gettext dumb-init \
                        vim htop bash git curl \
                        xz zlib \
                        python3 py3-markdown py3-pygments \
-                       openssh-server cgit 
+                       openssh-server cgit redis
 
 
 RUN adduser "git" --no-create-home --home /var/www --uid 1000 --disabled-password --shell /bin/bash && \
@@ -33,7 +33,7 @@ ADD docker-entrypoint.sh set_root_pw.sh /
 ADD cgit-simple-authentication /opt/cgit-simple-authentication 
 ADD scripts/* /usr/local/bin/
 
-RUN chown git:git /opt/cgit-simple-authentication 
+RUN chown git:git /opt/cgit-simple-authentication && chmod +Xx /opt/cgit-simple-authentication
 
 ADD cgitrc /tmp/cgitrc.tmpl    
 ADD httpd.conf /usr/local/apache2/conf/httpd.conf

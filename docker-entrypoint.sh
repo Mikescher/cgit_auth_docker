@@ -69,6 +69,12 @@ echo ""
 /usr/sbin/sshd
 
 echo ""
+echo "================= REDIS ================"
+echo ""
+
+nohup redis-server &
+
+echo ""
 echo "================ HTTPD ================"
 echo ""
 

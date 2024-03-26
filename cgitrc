@@ -67,3 +67,13 @@ virtual-root=$CGIT_VROOT
 section-from-path=$CGIT_SECTION_FROM_STARTPATH
 
 max-repo-count=$CGIT_MAX_REPO_COUNT
+
+
+
+auth-filter=/opt/cgit-simple-authentication
+
+cgit-simple-auth-cookie-ttl=600
+cgit-simple-auth-database=/config/auth.db
+cgit-simple-auth-bypass-root=false
+cgit-simple-auth-protect=full
+cgit-simple-auth-use-pam=false
