@@ -28,6 +28,7 @@ docker run                                 \
        --env "CGIT_DESC={{description}}"   \
        --env "DEFAULT_USER={{username}}"   \
        --env "DEFAULT_PASS={{password}}"   \
+       --env "AUTH_TTL=600"                \
        "mikescher/cgit_auth"
 
  # Then navigate to http://{{domain}}:{{port}} for the cgit website

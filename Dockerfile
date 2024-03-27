@@ -7,6 +7,7 @@ ENV CGIT_DESC="The hyperfast web frontend for Git repositories"
 ENV CGIT_VROOT="/"
 ENV CGIT_SECTION_FROM_STARTPATH=0
 ENV CGIT_MAX_REPO_COUNT=50
+ENV AUTH_TTL=600
 
 
 
