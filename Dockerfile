@@ -11,9 +11,9 @@ ENV AUTH_TTL=600
 
 
 
-RUN apk add --no-cache ca-certificates tzdata sudo gettext dumb-init \
+RUN apk add --no-cache ca-certificates tzdata sudo gettext ncurses dumb-init \
                        vim htop bash git curl \
-                       xz zlib \
+                       xz zlib sqlite \
                        python3 py3-markdown py3-pygments \
                        openssh-server cgit redis
 

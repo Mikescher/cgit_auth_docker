@@ -73,7 +73,7 @@ max-repo-count=$CGIT_MAX_REPO_COUNT
 auth-filter=/opt/cgit-simple-authentication
 
 cgit-simple-auth-cookie-ttl=$AUTH_TTL
-cgit-simple-auth-database=/config/auth.db
+cgit-simple-auth-database=/config/auth/auth.db
 cgit-simple-auth-bypass-root=false
 cgit-simple-auth-protect=full
 cgit-simple-auth-use-pam=false

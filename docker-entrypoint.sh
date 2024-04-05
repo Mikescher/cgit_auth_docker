@@ -48,9 +48,12 @@ echo ""
 echo "============= SETUP CGIT-AUTH ============="
 echo ""
 
-if [ ! -f "/config/auth.db" ]; then
+if [ ! -f "/config/auth/auth.db" ]; then
 
     echo "Init auth.db"
+
+    mkdir -p      "/config/auth"
+    chown git:git "/config/auth"
 
     [ -z "$DEFAULT_USER" ] && { red "missing env DEFAULT_USER -- cannot init auth.db"; exit 1; }
     [ -z "$DEFAULT_PASS" ] && { red "missing env DEFAULT_PASS -- cannot init auth.db"; exit 1; }
@@ -58,13 +61,14 @@ if [ ! -f "/config/auth.db" ]; then
     /opt/cgit-simple-authentication database init
     /opt/cgit-simple-authentication user add "$DEFAULT_USER" "$DEFAULT_PASS"
 
-    [ ! -f "/config/auth.db" ] && { red "failed to init auth.db"; exit 1; }
-
-    chown git:git "/config/auth.db"
-
-    chown git:git /var/cache/cgit/ -R
+    [ ! -f "/config/auth/auth.db" ] && { red "failed to init auth.db"; exit 1; }
 
 fi
+
+chown git:git "/config/auth/auth.db"
+chown git:git "/config/auth"
+
+chown git:git /var/cache/cgit/ -R
 
 echo ""
 echo "============ SSHD KEYGEN ============"

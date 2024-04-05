@@ -30,11 +30,11 @@ run:
 run-detached:
 	docker run --init --rm --detach -it --name "cgit_auth" \
 			   --env "CGIT_TITLE=My git server" \
-			   --env "	=Lorem Ipsum" \
+			   --env "CGIT_DESC=Lorem Ipsum" \
 			   --volume "$(shell pwd)/_repo:/cgit" \
 			   --volume "$(shell pwd)/_conf:/config" \
 			   --env "SSH_KEY=$(shell cat ~/.ssh/personal.pub)" \
-			   --env "	=admin" \
+			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
