@@ -47,6 +47,6 @@ docker run                                 \
 ## Push
 
 ```bash
-  $> git remote add origin "ssh://git@{{domain}}/cgit/{{repo_name}}:{{port}}"
+  $> git remote add origin "ssh://git@{{domain}}:{{port}}/cgit/{{repo_name}}"
   $> git push
 ```
