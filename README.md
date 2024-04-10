@@ -38,7 +38,7 @@ docker run                                 \
 ## Create repo
 
 ```bash
-  $> sh "git@{{domain}}" -p "{{port}}"
+  $> ssh "git@{{domain}}" -p "{{port}}"
   $> cd /cgit
   $> git init "{{repo_name}}" --bare
   $> /opt/cgit-simple-authentication repo add "{{repo_name}}" "{{username}}"
