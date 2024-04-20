@@ -23,6 +23,7 @@ run:
 			   --env "SSH_KEY=$(shell cat ~/.ssh/personal.pub)" \
 			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
+ 			   --env "CGIT_CACHE=0" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
 			   $(DOCKER_NAME):latest
@@ -36,6 +37,7 @@ run-detached:
 			   --env "SSH_KEY=$(shell cat ~/.ssh/personal.pub)" \
 			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
+ 			   --env "CGIT_CACHE=0" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
 			   $(DOCKER_NAME):latest

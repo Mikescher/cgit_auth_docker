@@ -30,6 +30,16 @@ echo ""
 
 envsubst < /tmp/cgitrc.tmpl > /etc/cgitrc
 
+if [ "${CGIT_CACHE:-1}" == "1" ]; then
+
+    perl -0777 -i -pe 's|#\{\{BEGIN CGIT_CACHE=0\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
+
+else
+
+    perl -0777 -i -pe 's|#\{\{BEGIN CGIT_CACHE=1\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
+
+fi
+
 sudo chown git:git -R /cgit/
 
 echo ""

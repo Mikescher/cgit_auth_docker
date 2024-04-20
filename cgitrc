@@ -1,6 +1,6 @@
 
-root-title=$CGIT_TITLE
-root-desc=$CGIT_DESC
+root-title=${CGIT_TITLE}
+root-desc=${CGIT_DESC}
 
 
 source-filter=/usr/lib/cgit/filters/syntax-highlighting.py
@@ -8,7 +8,6 @@ about-filter=/usr/lib/cgit/filters/about-formatting.sh
 
 
 scan-path=/cgit
-cache-scanrc-ttl=1
 
 
 readme=:README.md
@@ -42,7 +41,6 @@ readme=:install
 
 
 cache-root=/var/cache/cgit
-cache-size=2000
 
 
 css=/cgit-data/cgit.css
@@ -51,29 +49,61 @@ favicon=/cgit-data/favicon.ico
 
 
 enable-index-links=1
-enable-index-owner=0
+enable-commit-graph=1
 enable-remote-branches=1
 enable-log-filecount=1
 enable-log-linecount=1
 enable-git-config=1
+
+max-stats=year
+
+enable-http-clone=0
+
 snapshots=tar.xz zip
 
 
 robots=noindex, nofollow
 
 
-virtual-root=$CGIT_VROOT
+virtual-root=${CGIT_VROOT}
 
-section-from-path=$CGIT_SECTION_FROM_STARTPATH
+section-from-path=${CGIT_SECTION_FROM_STARTPATH}
 
-max-repo-count=$CGIT_MAX_REPO_COUNT
+max-repo-count=${CGIT_REPO_PAGESIZE}
+max-commit-count=${CGIT_LOG_PAGESIZE}
 
+repository-sort=name
+case-sensitive-sort=0
 
 
 auth-filter=/opt/cgit-simple-authentication
 
-cgit-simple-auth-cookie-ttl=$AUTH_TTL
+cgit-simple-auth-cookie-ttl=${AUTH_TTL}
 cgit-simple-auth-database=/config/auth/auth.db
 cgit-simple-auth-bypass-root=false
 cgit-simple-auth-protect=full
 cgit-simple-auth-use-pam=false
+
+
+#{{BEGIN CGIT_CACHE=1}}
+
+cache-scanrc-ttl=1
+cache-size=2000
+cache-dynamic-ttl=5
+cache-repo-ttl=5
+cache-root-ttl=5
+cache-static-ttl=5
+
+#{{END}}
+
+
+#{{BEGIN CGIT_CACHE=0}}
+
+cache-scanrc-ttl=0
+cache-size=0
+cache-dynamic-ttl=0
+cache-repo-ttl=0
+cache-root-ttl=0
+cache-static-ttl=0
+
+#{{END}}
