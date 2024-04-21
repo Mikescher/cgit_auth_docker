@@ -2,9 +2,11 @@
 DOCKER_REPO_EXT=registry.blackforestbytes.com
 DOCKER_NAME=mikescher/cgit_auth
 
-build_and_run: build run
+build: docker
 
-build:
+build_and_run: docker run
+
+docker:
 	docker build \
 		-t $(DOCKER_NAME):latest \
 		-t $(DOCKER_REPO_EXT)/$(DOCKER_NAME):latest \
@@ -24,6 +26,7 @@ run:
 			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
  			   --env "CGIT_CACHE=0" \
+ 			   --env "CGIT_AUTH=0" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
 			   $(DOCKER_NAME):latest
@@ -38,6 +41,7 @@ run-detached:
 			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
  			   --env "CGIT_CACHE=0" \
+ 			   --env "CGIT_AUTH=0" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
 			   $(DOCKER_NAME):latest

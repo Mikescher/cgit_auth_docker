@@ -7,8 +7,6 @@ source-filter=/usr/lib/cgit/filters/syntax-highlighting.py
 about-filter=/usr/lib/cgit/filters/about-formatting.sh
 
 
-scan-path=/cgit
-
 
 readme=:README.md
 readme=:readme.md
@@ -44,6 +42,8 @@ cache-root=/var/cache/cgit
 
 
 css=/cgit-data/cgit.css
+css=/cgit-data/cgit-dark.css
+
 logo=/cgit-data/cgit.png
 favicon=/cgit-data/favicon.ico  
 
@@ -54,6 +54,8 @@ enable-remote-branches=1
 enable-log-filecount=1
 enable-log-linecount=1
 enable-git-config=1
+enable-tree-linenumbers=1
+enable-blame=1  
 
 max-stats=year
 
@@ -75,6 +77,10 @@ max-commit-count=${CGIT_LOG_PAGESIZE}
 repository-sort=name
 case-sensitive-sort=0
 
+clone-url=https://${DOMAIN}/cgit/${DOLLAR}CGIT_REPO_URL git://${DOMAIN}/cgit/${DOLLAR}CGIT_REPO_URL ssh://git@${DOMAIN}:${SSHPORT}/cgit/${DOLLAR}CGIT_REPO_URL
+
+
+#{{BEGIN CGIT_AUTH=1}}
 
 auth-filter=/opt/cgit-simple-authentication
 
@@ -83,6 +89,13 @@ cgit-simple-auth-database=/config/auth/auth.db
 cgit-simple-auth-bypass-root=false
 cgit-simple-auth-protect=full
 cgit-simple-auth-use-pam=false
+
+#{{END}}
+
+
+#{{BEGIN CGIT_AUTH=0}}
+
+#{{END}}
 
 
 #{{BEGIN CGIT_CACHE=1}}
@@ -99,11 +112,24 @@ cache-static-ttl=5
 
 #{{BEGIN CGIT_CACHE=0}}
 
-cache-scanrc-ttl=0
 cache-size=0
+
+cache-scanrc-ttl=0
 cache-dynamic-ttl=0
 cache-repo-ttl=0
 cache-root-ttl=0
 cache-static-ttl=0
+cache-about-ttl=0
+cache-snapshot-ttl=0
 
 #{{END}}
+
+
+
+scan-path=/cgit
+
+
+
+
+
+

@@ -28,19 +28,24 @@ echo ""
 echo "============= SETUP CGIT ============="
 echo ""
 
+export DOLLAR='$'
 envsubst < /tmp/cgitrc.tmpl > /etc/cgitrc
 
 if [ "${CGIT_CACHE:-1}" == "1" ]; then
-
     perl -0777 -i -pe 's|#\{\{BEGIN CGIT_CACHE=0\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
-
 else
-
     perl -0777 -i -pe 's|#\{\{BEGIN CGIT_CACHE=1\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
+fi
 
+if [ "${CGIT_AUTH:-1}" == "1" ]; then
+    perl -0777 -i -pe 's|#\{\{BEGIN CGIT_AUTH=0\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
+else
+    perl -0777 -i -pe 's|#\{\{BEGIN CGIT_AUTH=1\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
 fi
 
 sudo chown git:git -R /cgit/
+
+/usr/share/webapps/cgit/cgit --version
 
 echo ""
 echo "============= SETUP GIT ============="
@@ -113,6 +118,9 @@ echo ""
 echo ""
 echo "================= SSHD ================"
 echo ""
+
+mkdir -p /var/run/sshd
+chmod 0755 /var/run/sshd
 
 /usr/sbin/sshd
 
