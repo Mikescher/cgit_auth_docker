@@ -28,12 +28,32 @@ docker run                                 \
        --env "CGIT_DESC={{description}}"   \
        --env "DEFAULT_USER={{username}}"   \
        --env "DEFAULT_PASS={{password}}"   \
+ 			 --env "CGIT_CACHE=0"                \
+ 			 --env "CGIT_AUTH=0"                 \
        --env "AUTH_TTL=600"                \
        "mikescher/cgit_auth"
 
  # Then navigate to http://{{domain}}:{{port}} for the cgit website
 
 ```
+
+## Env variable
+
+| Environment Variable           | Description                |
+|--------------------------------|----------------------------|
+| `CGIT_TITLE`                   | CGit HTML Title            |
+| `CGIT_DESC`                    | CGit HTML Subtitle         |
+| `CGIT_VROOT`                   |                            |
+| `CGIT_SECTION_FROM_STARTPATH`  |                            |
+| `CGIT_LOG_PAGESIZE`            | Pagesize for commit-list   |
+| `CGIT_REPO_PAGESIZE`           | Pagesize for repo-list     |
+| `CGIT_CACHE`                   | Set to 0 to disable cache  |
+| `CGIT_AUTH`                    | Set to 1 to enable auth    |
+| `DEFAULT_USER`                 | Username for auth          |
+| `DEFAULT_PASS`                 | Password for auth          |
+| `AUTH_TTL`                     |                            |
+| `DOMAIN`                       | Domain (for clone urls)    |
+| `SSHPORT`                      | SSH-Port (for clone urls)  |
 
 ## Create repo
 

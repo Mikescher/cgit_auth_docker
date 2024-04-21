@@ -26,7 +26,7 @@ run:
 			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
  			   --env "CGIT_CACHE=0" \
- 			   --env "CGIT_AUTH=0" \
+ 			   --env "CGIT_AUTH=1" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
 			   $(DOCKER_NAME):latest
@@ -41,7 +41,7 @@ run-detached:
 			   --env "DEFAULT_USER=admin" \
  			   --env "DEFAULT_PASS=admin" \
  			   --env "CGIT_CACHE=0" \
- 			   --env "CGIT_AUTH=0" \
+ 			   --env "CGIT_AUTH=1" \
 			   --publish 8022:22 \
 			   --publish 8080:80 \
 			   $(DOCKER_NAME):latest

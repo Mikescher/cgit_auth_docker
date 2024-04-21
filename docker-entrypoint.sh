@@ -21,9 +21,6 @@
     function white() { if [ -t 1 ] && [ -n "$(tput colors)" ] && [ "$(tput colors)" -ge 8 ]; then echo -e "\\x1B[37m$1\\x1B[0m"; else echo "$1"; fi; }
 
 
-
-
-
 echo ""
 echo "============= SETUP CGIT ============="
 echo ""
@@ -32,18 +29,34 @@ export DOLLAR='$'
 envsubst < /tmp/cgitrc.tmpl > /etc/cgitrc
 
 if [ "${CGIT_CACHE:-1}" == "1" ]; then
+    echo "[CGIT_CACHE := 1]"
     perl -0777 -i -pe 's|#\{\{BEGIN CGIT_CACHE=0\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
 else
+    echo "[CGIT_CACHE := 0]"
     perl -0777 -i -pe 's|#\{\{BEGIN CGIT_CACHE=1\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
 fi
 
 if [ "${CGIT_AUTH:-1}" == "1" ]; then
+    echo "[CGIT_AUTH := 1]"
+
     perl -0777 -i -pe 's|#\{\{BEGIN CGIT_AUTH=0\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
+
+    [ -z "${DEFAULT_USER:-}" ] && { red "missing env DEFAULT_USER -- cannot setup auth"; exit 1; }
+    [ -z "${DEFAULT_PASS:-}" ] && { red "missing env DEFAULT_PASS -- cannot setup auth"; exit 1; }
+    [ -z "${AUTH_TTL:-}" ]     && { red "missing env AUTH_TTL -- cannot setup auth"; exit 1; }
+
+    envsubst < /tmp/auth.lua > /opt/auth.lua
+
+    chmod +Xx /opt/auth.lua
+
 else
+    echo "[CGIT_AUTH := 0]"
     perl -0777 -i -pe 's|#\{\{BEGIN CGIT_AUTH=1\}\}.*?\{\{END\}\}||gs' /etc/cgitrc
 fi
 
 sudo chown git:git -R /cgit/
+
+echo ""
 
 /usr/share/webapps/cgit/cgit --version
 
@@ -58,32 +71,6 @@ touch /var/www/.bash_profile    && chown git:git /var/www/.bash_profile
 su -c 'git config --global init.defaultBranch master' git
 
 echo "cd /cgit" >> "/var/www/.bash_profile"
-
-echo ""
-echo "============= SETUP CGIT-AUTH ============="
-echo ""
-
-if [ ! -f "/config/auth/auth.db" ]; then
-
-    echo "Init auth.db"
-
-    mkdir -p      "/config/auth"
-    chown git:git "/config/auth"
-
-    [ -z "$DEFAULT_USER" ] && { red "missing env DEFAULT_USER -- cannot init auth.db"; exit 1; }
-    [ -z "$DEFAULT_PASS" ] && { red "missing env DEFAULT_PASS -- cannot init auth.db"; exit 1; }
-
-    /opt/cgit-simple-authentication database init
-    /opt/cgit-simple-authentication user add "$DEFAULT_USER" "$DEFAULT_PASS"
-
-    [ ! -f "/config/auth/auth.db" ] && { red "failed to init auth.db"; exit 1; }
-
-fi
-
-chown git:git "/config/auth/auth.db"
-chown git:git "/config/auth"
-
-chown git:git /var/cache/cgit/ -R
 
 echo ""
 echo "============ SSHD KEYGEN ============"
@@ -123,12 +110,6 @@ mkdir -p /var/run/sshd
 chmod 0755 /var/run/sshd
 
 /usr/sbin/sshd
-
-echo ""
-echo "================= REDIS ================"
-echo ""
-
-nohup redis-server &
 
 echo ""
 echo "================ HTTPD ================"

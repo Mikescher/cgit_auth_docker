@@ -44,6 +44,8 @@ cache-root=/var/cache/cgit
 css=/cgit-data/cgit.css
 css=/cgit-data/cgit-dark.css
 
+js=/cgit-data/cgit.js
+
 logo=/cgit-data/cgit.png
 favicon=/cgit-data/favicon.ico  
 
@@ -82,13 +84,7 @@ clone-url=https://${DOMAIN}/cgit/${DOLLAR}CGIT_REPO_URL git://${DOMAIN}/cgit/${D
 
 #{{BEGIN CGIT_AUTH=1}}
 
-auth-filter=/opt/cgit-simple-authentication
-
-cgit-simple-auth-cookie-ttl=${AUTH_TTL}
-cgit-simple-auth-database=/config/auth/auth.db
-cgit-simple-auth-bypass-root=false
-cgit-simple-auth-protect=full
-cgit-simple-auth-use-pam=false
+auth-filter=lua:/opt/auth.lua
 
 #{{END}}
 

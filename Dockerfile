@@ -25,8 +25,10 @@ ENV CGIT_LOG_PAGESIZE=50
 ENV CGIT_REPO_PAGESIZE=50
 ENV CGIT_CACHE=1
 ENV CGIT_AUTH=0
+ENV DEFAULT_USER=""
+ENV DEFAULT_PASS=""
 
-ENV AUTH_TTL=600
+ENV AUTH_TTL=604800
 ENV DOMAIN="localhost"
 ENV SSHPORT=22
 
@@ -35,9 +37,10 @@ ENV SSHPORT=22
 RUN apt-get update && \
     apt-get install -y ca-certificates tzdata sudo gettext dumb-init \
                        vim htop bash git curl \
-                       sqlite3 \
                        python3 python3-markdown python3-pygments \
-                       openssh-server cgit redis && \
+                       openssh-server libssl-dev luarocks && \
+    luarocks install luaossl  && \
+    luarocks install luaposix && \
     rm -rf /var/lib/{apt,dpkg,cache,log}/
                        
 
@@ -47,7 +50,7 @@ RUN adduser "git" --no-create-home --home /var/www --uid 1000 --disabled-passwor
 
 
 COPY --from=builder /var/www/htdocs/cgit/         /usr/share/webapps/cgit/
-COPY --from=builder /usr/local/lib/cgit/filters/  /usr/local/lib/cgit/filters/
+COPY --from=builder /usr/local/lib/cgit/filters/  /usr/lib/cgit/filters/
 
 RUN mkdir -p /var/cache/cgit && chown git:git /var/cache/cgit
 RUN mkdir -p /cgit           && chown git:git /cgit
@@ -60,13 +63,11 @@ ADD cgit-dark.css   /usr/share/webapps/cgit/cgit-dark.css
 ###################################################
 
 ADD docker-entrypoint.sh set_root_pw.sh /
-ADD cgit-simple-authentication /opt/cgit-simple-authentication 
 ADD scripts/* /usr/local/bin/
 
-RUN chown git:git /opt/cgit-simple-authentication && chmod +Xx /opt/cgit-simple-authentication
-
-ADD cgitrc /tmp/cgitrc.tmpl    
+ADD cgitrc     /tmp/cgitrc.tmpl    
 ADD httpd.conf /usr/local/apache2/conf/httpd.conf
+ADD auth.lua   /tmp/auth.lua
 
 WORKDIR "/var/www/"
 
