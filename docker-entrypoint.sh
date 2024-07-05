@@ -28,6 +28,15 @@ if [ -f "/docker_initialized" ]; then
     echo ""
 
     echo ""
+    echo "================= SSHD ================"
+    echo ""
+
+    mkdir -p /var/run/sshd
+    chmod 0755 /var/run/sshd
+
+    /usr/sbin/sshd
+
+    echo ""
     echo "================ HTTPD ================"
     echo ""
 
