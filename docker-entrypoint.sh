@@ -21,6 +21,27 @@
     function white() { if [ -t 1 ] && [ -n "$(tput colors)" ] && [ "$(tput colors)" -ge 8 ]; then echo -e "\\x1B[37m$1\\x1B[0m"; else echo "$1"; fi; }
 
 
+if [ -f "/docker_initialized" ]; then
+
+    echo ""
+    echo "================= ALREADY INITIALIZED ================"
+    echo ""
+
+    echo ""
+    echo "================ HTTPD ================"
+    echo ""
+
+    /usr/bin/dumb-init --rewrite "28:0" -- "$@"
+
+    echo ""
+    echo "============== FINISHED ==============="
+    echo ""
+
+    exit 0
+
+fi
+
+
 echo ""
 echo "============= SETUP CGIT ============="
 echo ""
@@ -110,6 +131,12 @@ mkdir -p /var/run/sshd
 chmod 0755 /var/run/sshd
 
 /usr/sbin/sshd
+
+echo ""
+echo "================ MARKER ================"
+echo ""
+
+date > "/docker_initialized"
 
 echo ""
 echo "================ HTTPD ================"
