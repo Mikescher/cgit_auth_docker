@@ -28,8 +28,8 @@ docker run                                 \
        --env "CGIT_DESC={{description}}"   \
        --env "DEFAULT_USER={{username}}"   \
        --env "DEFAULT_PASS={{password}}"   \
- 			 --env "CGIT_CACHE=0"                \
- 			 --env "CGIT_AUTH=0"                 \
+       --env "CGIT_CACHE=0"                \
+       --env "CGIT_AUTH=0"                 \
        --env "AUTH_TTL=600"                \
        "mikescher/cgit_auth"
 
