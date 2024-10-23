@@ -27,6 +27,10 @@ if [ -f "/docker_initialized" ]; then
     echo "================= ALREADY INITIALIZED ================"
     echo ""
 
+    /usr/share/webapps/cgit/cgit --version
+
+    rm "/var/run/cgid.sock."* || true
+
     echo ""
     echo "================= SSHD ================"
     echo ""
